@@ -2,6 +2,7 @@
 #include <memory.h>
 #include <CJson/cJSON.h>
 #include "getweather.h"
+#include "Location/location.h"
 
 const char *BASE_URL = "https://free-api.heweather.com/s6/weather/";
 const char *LOCATION_PRE = "?location=";
@@ -70,7 +71,7 @@ char *target_url(const char *style, const char *location) {
     strcpy(str, BASE_URL);
     strncat (str, style, strlen(style));
     strncat(str, LOCATION_PRE, strlen(LOCATION_PRE));
-    if (location!=NULL) {
+    if (location != NULL) {
         strncat(str, location, strlen(location));
     } else {
         strncat(str, DEFAULT_CITY, strlen(DEFAULT_CITY));
@@ -106,3 +107,11 @@ void get_weather(char *weather_style, char *location) {
     }
 }
 
+int get_weather_default(char *style) {
+    int result;
+    char *location_num = calloc(12, sizeof(char));
+    FILE_STATE state = get_default_num(location_num);
+    get_weather(style, location_num);
+    free(location_num);
+    return 0;
+}

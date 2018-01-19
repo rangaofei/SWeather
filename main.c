@@ -77,11 +77,11 @@ void set_city_name(char *city_num, char *file_name) {
 }
 
 int main(int argc, char *argv[]) {
-    char city_num[11];
-    memset(city_num, 0, sizeof(city_num));
+    char *city_num = calloc(12, sizeof(char));
     if (argc < 2) {
-        printf("SimpleWeather --version %d.%d.%d\n",
-               VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+        get_weather_default("forecast");
+        free(city_num);
+        return 0;
         FILE_STATE state = get_default_num(city_num);
         switch (state) {
             case SUCCESS:

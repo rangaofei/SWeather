@@ -8,4 +8,4 @@
 
 void get_weather(char *weather_style, char *location);
 
-
+int get_weather_default(char *style);
