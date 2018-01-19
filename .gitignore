@@ -1,0 +1,7 @@
+build
+cmake-build-debug
+.DS_Store
+pack/_CPack_Packages
+.idea
+cmake-build-debug/
+cmake-build-release/
