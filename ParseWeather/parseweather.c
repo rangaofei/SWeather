@@ -15,7 +15,7 @@
  */
 
 #define UPDATE_TIME "更新时间：%s\n"
-#define LINE_NUM 115
+#define LINE_NUM 119
 
 /**
  * 打印分割线
@@ -49,6 +49,14 @@ char *get_basic(cJSON *basic) {
     return location;
 }
 
+char *get_temp_range(cJSON *data) {
+    char *temp_range = calloc(8, sizeof(char));
+    strcpy(temp_range, cJSON_GetObjectItem(data, "tmp_min")->valuestring);
+    strcat(temp_range, "-");
+    strcat(temp_range, cJSON_GetObjectItem(data, "tmp_max")->valuestring);
+    return temp_range;
+}
+
 //打印更新时间字段--"update"
 void print_update(cJSON *update_time, int loc) {
     if (loc) {
@@ -77,12 +85,23 @@ void print_basic(cJSON *basic, int full) {
     free(location);
 }
 
-void print_weather_cond(int length, char *condition) {
-    int l = ((int) strlen(condition)) / 3 * 2;
+void print_center_cn(int length, char *content) {
+    int l = ((int) strlen(content)) / 3 * 2;
     int l_left = (length - l) / 2;
     int l_right = length - l - l_left;
     print_space(l_left);
-    printf("%s", condition);
+    printf("%s", content);
+    print_space(l_right);
+    printf("|");
+}
+
+
+void print_center_en(int length, char *content) {
+    int l = (int) strlen(content);
+    int l_left = (length - l) / 2;
+    int l_right = length - l - l_left;
+    print_space(l_left);
+    printf("%s", content);
     print_space(l_right);
     printf("|");
 }
@@ -96,7 +115,7 @@ void print_header() {
     printf("|");
 
     print_space(12);
-    printf("%s", "天 气");
+    printf("%s", "天   气");
     print_space(12);
     printf("|");
 
@@ -110,9 +129,9 @@ void print_header() {
     print_space(7);
     printf("|");
 
-    print_space(10);
+    print_space(11);
     printf("%s", "风");
-    print_space(10);
+    print_space(11);
     printf("|");
 
     print_space(7);
@@ -129,12 +148,12 @@ void print_header() {
 
     printf("%s|", "   白天   ");
     printf("%s|", "   夜间   ");
-    printf("%s|", " 温 度 ");
+    printf("%s|", "  温 度  ");
     printf("%s|", " 日 出 ");
     printf("%s|", " 日 落 ");
     printf("%s|", " 月 升 ");
     printf("%s|", " 月 落 ");
-    printf("%s|", "  风向  ");
+    printf("%s|", "  风  向  ");
     printf("%s|", " 风力 ");
     printf("%s|", " 风速 ");
     printf("%s|", " 紫外线 ");
@@ -162,14 +181,16 @@ void print_forecast(cJSON *forecast_list) {
         item = cJSON_GetArrayItem(forecast_list, i);
         printf("|");
         print_weather(" %s |", item, "date");
-        print_weather_cond(10, cJSON_GetObjectItem(item, "cond_txt_d")->valuestring);
-        print_weather_cond(10, cJSON_GetObjectItem(item, "cond_txt_n")->valuestring);
-        print_weather_two(" %2s-%2s |", item, "tmp_min", "tmp_max");
+        print_center_cn(10, cJSON_GetObjectItem(item, "cond_txt_d")->valuestring);
+        print_center_cn(10, cJSON_GetObjectItem(item, "cond_txt_n")->valuestring);
+        char *temp_range = get_temp_range(item);
+        print_center_en(9, temp_range);
+        free(temp_range);
         print_weather(" %5s |", item, "sr");
         print_weather(" %5s |", item, "ss");
         print_weather(" %5s |", item, "mr");
         print_weather(" %5s |", item, "ms");
-        print_weather_cond(8, cJSON_GetObjectItem(item, "wind_dir")->valuestring);
+        print_center_cn(10, cJSON_GetObjectItem(item, "wind_dir")->valuestring);
         print_weather(" %4s |", item, "wind_sc");
         print_weather(" %4s |", item, "wind_spd");
         print_weather(" %6s |", item, "uv_index");
