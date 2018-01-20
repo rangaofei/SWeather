@@ -1,7 +1,53 @@
 #include <CJson/cJSON.h>
 #include "parseweather.h"
+/**
+ * +----------------------------------------------------------------------------------+
+ * |                                   江苏-无锡-梁溪                                   |
+ * +----------------------------------------------------------------------------------+
+ * |    日期   |          天气        |     日    |     月    |      风     |    其他    |
+ * +----------------------------------------------------------------------------------+
+ * |三天       |白   天|夜   间|气   温|日  出|日 落|月  出|月 落|风 向|风速|风力|紫外线|能见度|
+ * +----------------------------------------------------------------------------------+
+ * |2018-01-19|晴间多云|晴间多云|-10-10|06:50|18:00|18:00|5:00|西北风|14 |14 |   1  | 20 |
+ * |
+ * |
+ * +----------------------------------------------------------------------------------+
+ */
 
 #define UPDATE_TIME "更新时间：%s\n"
+#define LINE_NUM 115
+
+/**
+ * 打印分割线
+ */
+void print_line() {
+    printf("+");
+    for (int i = 0; i < LINE_NUM; i++) {
+        printf("-");
+    }
+    printf("+\n");
+}
+
+void print_space(int length) {
+    for (int i = 0; i < length; i++) {
+        printf(" ");
+    }
+}
+
+/**
+ * 获取地址信息
+ * @param basic
+ * @return
+ */
+char *get_basic(cJSON *basic) {
+    char *location = calloc(30, sizeof(char));
+    strcpy(location, cJSON_GetObjectItem(basic, "admin_area")->valuestring);
+    strcat(location, "-");
+    strcat(location, cJSON_GetObjectItem(basic, "parent_city")->valuestring);
+    strcat(location, "-");
+    strcat(location, cJSON_GetObjectItem(basic, "location")->valuestring);
+    return location;
+}
 
 //打印更新时间字段--"update"
 void print_update(cJSON *update_time, int loc) {
@@ -14,11 +60,85 @@ void print_update(cJSON *update_time, int loc) {
 
 //打印基本信息字段--"basic"
 void print_basic(cJSON *basic, int full) {
+    print_line();
+    char *location = get_basic(basic);
     if (!full) {
-        print_weather_two("城市：%s-%s\n", basic, "parent_city", "location");
+        int length = ((int) strlen(location) - 2) / 3 * 2 + 2;
+        int space_length_left = (LINE_NUM - length) / 2;
+        int space_length_right = LINE_NUM - length - space_length_left;
+        printf("|");
+        print_space(space_length_left);
+        printf("%s", location);
+        print_space(space_length_right);
+        printf("|\n");
     } else {
 
     }
+    free(location);
+}
+
+void print_weather_cond(int length, char *condition) {
+    int l = ((int) strlen(condition)) / 3 * 2;
+    int l_left = (length - l) / 2;
+    int l_right = length - l - l_left;
+    print_space(l_left);
+    printf("%s", condition);
+    print_space(l_right);
+    printf("|");
+}
+
+void print_header() {
+    print_line();
+    printf("|");
+    print_space(4);
+    printf("%s", "日期");
+    print_space(4);
+    printf("|");
+
+    print_space(12);
+    printf("%s", "天 气");
+    print_space(12);
+    printf("|");
+
+    print_space(6);
+    printf("%s", "日");
+    print_space(7);
+    printf("|");
+
+    print_space(6);
+    printf("%s", "月");
+    print_space(7);
+    printf("|");
+
+    print_space(10);
+    printf("%s", "风");
+    print_space(10);
+    printf("|");
+
+    print_space(7);
+    printf("%s", "其他");
+    print_space(6);
+    printf("|\n");
+
+    print_line();
+    printf("|");
+    print_space(4);
+    printf("%s", "三日");
+    print_space(4);
+    printf("|");
+
+    printf("%s|", "   白天   ");
+    printf("%s|", "   夜间   ");
+    printf("%s|", " 温 度 ");
+    printf("%s|", " 日 出 ");
+    printf("%s|", " 日 落 ");
+    printf("%s|", " 月 升 ");
+    printf("%s|", " 月 落 ");
+    printf("%s|", "  风向  ");
+    printf("%s|", " 风力 ");
+    printf("%s|", " 风速 ");
+    printf("%s|", " 紫外线 ");
+    printf("%s|\n", " 能见度 ");
 }
 
 //打印现在的天气信息字段--"now"
@@ -32,48 +152,28 @@ void print_now(cJSON *now) {
     print_weather("能见度：%s\n", now, "vis");
 }
 
-void print_line() {
-    printf("|");
-    for (int i = 0; i < TAB_LENGTH * 4 - 1; i++) {
-        printf("-");
-    }
-    printf("|\n");
-}
-
-void print_rect() {
-    print_line();
-    printf("|");
-    printf("%10s\t|", "日期");
-    printf("%s\t|", "白天天气");
-    printf("%s\t|", "夜间天气");
-    printf("%7s\t|", "日出");
-    printf("%7s\t|", "日落");
-    printf("%7s\t|", "温度");
-    printf("%7s\t|", "风向");
-    printf("%7s\t|", "风力");
-    printf("%7s\t|", "紫外线");
-    printf("%7s\t|\n", "能见度");
-    print_line();
-}
 
 //打印三天的天气字段--"forecast"
 void print_forecast(cJSON *forecast_list) {
     int length = cJSON_GetArraySize(forecast_list);
     cJSON *item;
-    print_rect();
+    print_line();
     for (int i = 0; i < length; ++i) {
         item = cJSON_GetArrayItem(forecast_list, i);
         printf("|");
-        print_weather("%10s\t|", item, "date");
-        print_weather("%10s\t|", item, "cond_txt_d");
-        print_weather("%10s\t|", item, "cond_txt_n");
-        print_weather("%s\t|", item, "sr");
-        print_weather("%s\t|", item, "ss");
-        print_weather_two("%s-%s\t|", item, "tmp_min", "tmp_max");
-        print_weather("%s\t|", item, "wind_sc");
-        print_weather("%s\t|", item, "wind_spd");
-        print_weather("%s\t|", item, "uv_index");
-        print_weather("%s\t|\n", item, "vis");
+        print_weather(" %s |", item, "date");
+        print_weather_cond(10, cJSON_GetObjectItem(item, "cond_txt_d")->valuestring);
+        print_weather_cond(10, cJSON_GetObjectItem(item, "cond_txt_n")->valuestring);
+        print_weather_two(" %2s-%2s |", item, "tmp_min", "tmp_max");
+        print_weather(" %5s |", item, "sr");
+        print_weather(" %5s |", item, "ss");
+        print_weather(" %5s |", item, "mr");
+        print_weather(" %5s |", item, "ms");
+        print_weather_cond(8, cJSON_GetObjectItem(item, "wind_dir")->valuestring);
+        print_weather(" %4s |", item, "wind_sc");
+        print_weather(" %4s |", item, "wind_spd");
+        print_weather(" %6s |", item, "uv_index");
+        print_weather(" %6s |\n", item, "vis");
     }
     print_line();
 }
@@ -95,6 +195,7 @@ void weather_forecast(cJSON *data, int show_basic, int show_forecast, int show_u
         print_basic(cJSON_GetObjectItem(data, "basic"), 0);
     }
     if (show_forecast) {
+        print_header();
         print_forecast(cJSON_GetObjectItem(data, "daily_forecast"));
     }
     if (show_update) {

@@ -87,8 +87,8 @@ void get_weather(char *weather_style, char *location) {
     chunk.memory = malloc(1);
     chunk.size = 0;
     curl = curl_easy_init();
-    char *url = target_url(weather_style, location);
     if (curl) {
+        char *url = target_url(weather_style, location);
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5L);
@@ -108,10 +108,19 @@ void get_weather(char *weather_style, char *location) {
 }
 
 int get_weather_default(char *style) {
-    int result;
     char *location_num = calloc(12, sizeof(char));
     FILE_STATE state = get_default_num(location_num);
-    get_weather(style, location_num);
+    switch (state) {
+        case SUCCESS:
+            get_weather(style, location_num);
+            break;
+        case NOT_FOUND:
+            printf("请输入\n\tsweather -setloc XXX\n来设置默认城市");
+            break;
+        case TYPE_INCORRECT:
+            printf("获取配置文件错误");
+            break;
+    }
     free(location_num);
     return 0;
 }

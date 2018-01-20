@@ -3,7 +3,7 @@ project(SWeather)
 # set the version
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 1)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 2)
 
 configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"
@@ -14,7 +14,7 @@ set(CMAKE_C_STANDARD 99)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} ")
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DENABLE_DEBUG)
 ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -53,11 +53,12 @@ set(CPACK_SOURCE_IGNORE_FILES
         ${PROJECT_SOURCE_DIR}/.idea
         ${PROJECT_SOURCE_DIR}/.DS_Store
         ${PROJECT_SOURCE_DIR}/.git
-        ${PROJECT_SOURCE_DIR}/.gitignore)
+        ${PROJECT_SOURCE_DIR}/.gitignore
+        ${PROJECT_SOURCE_DIR}/src/city.txt)
 set(CPACK_SOURCE_PACKAGE_FILE_NAME
         sweahter-${PROJECT_VERSION_FULL})
 
-set(CPACK_SOURCE_GENERATOR "TGZ" )
+set(CPACK_SOURCE_GENERATOR "TGZ")
 include(CPack)
 
 

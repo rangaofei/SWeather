@@ -35,9 +35,6 @@ typedef enum {
     SUCCESS=1, NOT_FOUND, TYPE_INCORRECT
 } FILE_STATE;
 
-void get_simple_location(char *loc_num);
-
-void get_full_location(char *loc_num);
 
 FILE_STATE get_default_num(char *num);
 

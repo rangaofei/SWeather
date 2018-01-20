@@ -4,8 +4,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <string.h>
+
 
 #define TAB_LENGTH 26
+
 void print_update(cJSON *update_time, int loc);
 
 void print_basic(cJSON *basic, int full);
