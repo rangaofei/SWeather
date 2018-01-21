@@ -79,26 +79,9 @@ void set_city_name(char *city_num, char *file_name) {
 int main(int argc, char *argv[]) {
     char *city_num = calloc(12, sizeof(char));
     if (argc < 2) {
-        get_weather_default("forecast");
+        get_weather_default(WEATHER_DEFAULT);
         free(city_num);
         return 0;
-        FILE_STATE state = get_default_num(city_num);
-        switch (state) {
-            case SUCCESS:
-                get_weather("forecast", city_num);
-                break;
-            case NOT_FOUND:
-                printf("未找到配置文件，请执行：\n\t\"sweather -setloc XXXX\"\n"
-                               "来设置默认地址");
-                break;
-            case TYPE_INCORRECT:
-                printf("配置文件格式被更改，请执行：\n\t\"sweather -setloc XXXX\"\n"
-                               "来设置默认地址");
-                break;
-            default:
-                printf("读取配置文件错误\n");
-                break;
-        }
     }
     if (argc == 2) {
         if ((strcmp(argv[1], "-v") == 0) || strcmp(argv[1], "-version") == 0) {
@@ -110,13 +93,13 @@ int main(int argc, char *argv[]) {
                    "https://github.com/DaveGamble/cJSON");
         } else if ((strcmp(argv[1], "-now") == 0)) {
             get_city_name(city_num, FILE_NAME);
-            get_weather("now", city_num);
+            get_weather(WEATHER_NOW, city_num);
         }
     }
 
     if (argc == 3) {
         if ((strcmp(argv[1], "-loc") == 0)) {
-            get_weather("forecast", argv[2]);
+            get_weather(WEATHER_DEFAULT, argv[2]);
         } else if (strcmp(argv[1], "-setloc") == 0) {
             set_city_name(argv[2], FILE_NAME);
         }

@@ -5,14 +5,15 @@
 #include <stdio.h>
 
 #include <string.h>
+#include "tool.h"
 
 
 #define TAB_LENGTH 26
 
-void print_update(cJSON *update_time, int loc);
+void show_update_info(cJSON *update_time, int loc);
 
-void print_basic(cJSON *basic, int full);
+void show_basic_info(cJSON *basic, int full);
 
-void weather_now(cJSON *data, int show_basic, int show_now, int show_update);
 
-void weather_forecast(cJSON *data, int show_basic, int show_forecast, int show_update);
+void show_weather(cJSON *data, int show_basic, int show_forecast, int show_now,
+                  int show_hourly, int show_lifestyle, int show_time);

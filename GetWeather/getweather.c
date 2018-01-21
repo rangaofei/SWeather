@@ -4,11 +4,10 @@
 #include "getweather.h"
 #include "Location/location.h"
 
-const char *BASE_URL = "https://free-api.heweather.com/s6/weather/";
+const char *BASE_URL = "https://free-api.heweather.com/s6/";
 const char *LOCATION_PRE = "?location=";
 const char *DEFAULT_CITY = "CN101190207";
 const char *KEY = "&&key=cae08893742340e88cdaeab71d603761";
-const char *NOW = "now";
 
 
 struct WeatherBody {
@@ -32,15 +31,6 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     return realsize;
 }
 
-void print_time(void) {
-    time_t timep;
-    struct tm *p;
-    time(&timep);
-    p = localtime(&timep); //此函数获得的tm结构体的时间，是已经进行过时区转化为本地时间
-    printf("当前时间：%d-%02d-%02d %02d:%02d\n",
-           1900 + p->tm_year, 1 + p->tm_mon, p->tm_mday, p->tm_hour, p->tm_min);
-    free(p);
-}
 
 void parseJson(char *chunk, char *type) {
     cJSON *root = cJSON_Parse(chunk);
@@ -54,11 +44,11 @@ void parseJson(char *chunk, char *type) {
             continue;
         }
         if (strcmp(type, WEATHER_NOW) == 0) {
-            weather_now(item, 1, 1, 1);
+            show_weather(item, 1, 0, 1, 0, 0, 1);
         } else if (strcmp(type, WEATHER_FORECAST) == 0) {
-            weather_forecast(item, 1, 1, 1);
-        } else if (strcmp(type, "default") == 0) {
-            weather_forecast(item, 1, 1, 1);
+            show_weather(item, 1, 1, 0, 0, 0, 1);
+        } else if (strcmp(type, WEATHER_DEFAULT) == 0) {
+            show_weather(item, 1, 1, 1, 1, 1, 1);
         }
     }
     if (root) {
@@ -70,13 +60,13 @@ char *target_url(const char *style, const char *location) {
     char *str = (char *) malloc(150);
     strcpy(str, BASE_URL);
     strncat (str, style, strlen(style));
-    strncat(str, LOCATION_PRE, strlen(LOCATION_PRE));
+    strcat(str, LOCATION_PRE);
     if (location != NULL) {
-        strncat(str, location, strlen(location));
+        strcat(str, location);
     } else {
-        strncat(str, DEFAULT_CITY, strlen(DEFAULT_CITY));
+        strcat(str, DEFAULT_CITY);
     }
-    strncat(str, KEY, strlen(KEY));
+    strcat(str, KEY);
     return str;
 }
 
@@ -95,8 +85,9 @@ void get_weather(char *weather_style, char *location) {
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) &chunk);
         res = curl_easy_perform(curl);
-        print_time();
-        parseJson(chunk.memory, weather_style);
+        if (res == CURLE_OK) {
+            parseJson(chunk.memory, weather_style);
+        }
         if (res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                     curl_easy_strerror(res));
