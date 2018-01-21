@@ -288,7 +288,7 @@ void show_lifestyle_header() {
     printf("|");
     print_center_mix(14, "类型");
     print_center_mix(10, "舒适度");
-    print_center_mix(LINE_NUM - 16 - 10 , "详细信息");
+    print_center_mix(LINE_NUM - 16 - 10, "详细信息");
     printf("\n");
 }
 
@@ -302,7 +302,7 @@ void show_lifestyle_info(cJSON *lifestyle) {
         printf("|");
         print_center_mix(14, type);
         print_center_mix(10, cJSON_GetObjectItem(item, "brf")->valuestring);
-        print_center_mix(LINE_NUM - 10 - 16 , cJSON_GetObjectItem(item, "txt")->valuestring);
+        print_center_mix(LINE_NUM - 10 - 16, cJSON_GetObjectItem(item, "txt")->valuestring);
         printf("\n");
     }
 }
@@ -310,26 +310,39 @@ void show_lifestyle_info(cJSON *lifestyle) {
 void show_weather(cJSON *data, int show_basic, int show_forecast, int show_now,
                   int show_hourly, int show_lifestyle, int show_time) {
     if (show_basic) {
-        show_basic_info(cJSON_GetObjectItem(data, "basic"), 0);
+        if (cJSON_GetObjectItem(data, "basic") != NULL) {
+            show_basic_info(cJSON_GetObjectItem(data, "basic"), 0);
+        }
     }
     if (show_forecast) {
-        show_forecast_header();
-        show_forecast_info(cJSON_GetObjectItem(data, "daily_forecast"));
+        if (cJSON_GetObjectItem(data, "daily_forecast") != NULL) {
+            show_forecast_header();
+            show_forecast_info(cJSON_GetObjectItem(data, "daily_forecast"));
+        }
     }
+
     if (show_now) {
-        show_now_header();
-        show_now_info(cJSON_GetObjectItem(data, "now"));
+        if (cJSON_GetObjectItem(data, "now") != NULL) {
+            show_now_header();
+            show_now_info(cJSON_GetObjectItem(data, "now"));
+        }
     }
     if (show_hourly) {
-        show_hourly_header();
-        show_hourly_info(cJSON_GetObjectItem(data, "hourly"));
+        if (cJSON_GetObjectItem(data, "hourly") != NULL) {
+            show_hourly_header();
+            show_hourly_info(cJSON_GetObjectItem(data, "hourly"));
+        }
     }
     if (show_lifestyle) {
-        show_lifestyle_header();
-        show_lifestyle_info(cJSON_GetObjectItem(data, "lifestyle"));
+        if (cJSON_GetObjectItem(data, "lifestyle") != NULL) {
+            show_lifestyle_header();
+            show_lifestyle_info(cJSON_GetObjectItem(data, "lifestyle"));
+        }
     }
     if (show_time) {
-        show_update_info(cJSON_GetObjectItem(data, "update"), 1);
+        if (cJSON_GetObjectItem(data, "update") != NULL) {
+            show_update_info(cJSON_GetObjectItem(data, "update"), 1);
+        }
     }
     print_line(LINE_NUM);
 }
