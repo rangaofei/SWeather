@@ -49,6 +49,10 @@ void parseJson(char *chunk, char *type) {
             show_weather(item, 1, 1, 0, 0, 0, 1);
         } else if (strcmp(type, WEATHER_DEFAULT) == 0) {
             show_weather(item, 1, 1, 1, 1, 1, 1);
+        } else if (strcmp(type, WEATHER_HOURLY) == 0) {
+            show_weather(item, 1, 0, 0, 1, 0, 1);
+        } else if (strcmp(type, WEATHER_LIFESTYLE) == 0) {
+            show_weather(item, 1, 0, 0, 0, 1, 1);
         }
     }
     if (root) {

@@ -80,8 +80,6 @@ int main(int argc, char *argv[]) {
     char *city_num = calloc(12, sizeof(char));
     if (argc < 2) {
         get_weather_default(WEATHER_DEFAULT);
-        free(city_num);
-        return 0;
     }
     if (argc == 2) {
         if ((strcmp(argv[1], "-v") == 0) || strcmp(argv[1], "-version") == 0) {
@@ -94,6 +92,15 @@ int main(int argc, char *argv[]) {
         } else if ((strcmp(argv[1], "-now") == 0)) {
             get_city_name(city_num, FILE_NAME);
             get_weather(WEATHER_NOW, city_num);
+        } else if ((strcmp(argv[1], "-forecast")) == 0) {
+            get_city_name(city_num, FILE_NAME);
+            get_weather_default(WEATHER_FORECAST);
+        } else if ((strcmp(argv[1], "-hourly")) == 0) {
+            get_weather(city_num, FILE_NAME);
+            get_weather_default(WEATHER_HOURLY);
+        } else if((strcmp(argv[1],"-lifestyle"))==0){
+            get_weather(city_num, FILE_NAME);
+            get_weather_default(WEATHER_LIFESTYLE);
         }
     }
 
@@ -104,5 +111,6 @@ int main(int argc, char *argv[]) {
             set_city_name(argv[2], FILE_NAME);
         }
     }
+    free(city_num);
     return 0;
 }
