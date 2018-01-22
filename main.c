@@ -2,16 +2,6 @@
 #include "main.h"
 
 
-void get_city_name(char *city_num, char *file_name) {
-    FILE *f = fopen(file_name, "r");
-    if (f == NULL) {
-        printf("您还未设置您所在的城市，请设置您的城市名称：\n    sweather -setloc <location>");
-        exit(0);
-    }
-    fread(city_num, 1, sizeof(char) * 11, f);
-    fclose(f);
-}
-
 void set_city_name(char *city_num, char *file_name) {
     FILE *f = fopen(file_name, "wb");
     FILE *f_list = fopen(FILE_LIST, "r");
@@ -77,9 +67,9 @@ void set_city_name(char *city_num, char *file_name) {
 }
 
 int main(int argc, char *argv[]) {
-    char *city_num = calloc(12, sizeof(char));
     if (argc < 2) {
         get_weather_default(WEATHER_DEFAULT);
+        return 0;
     }
     if (argc == 2) {
         if ((strcmp(argv[1], "-v") == 0) || strcmp(argv[1], "-version") == 0) {
@@ -90,16 +80,12 @@ int main(int argc, char *argv[]) {
             printf("cJSON --info\n    %s\n",
                    "https://github.com/DaveGamble/cJSON");
         } else if ((strcmp(argv[1], "-now") == 0)) {
-            get_city_name(city_num, FILE_NAME);
-            get_weather(WEATHER_NOW, city_num);
+            get_weather_default(WEATHER_NOW);
         } else if ((strcmp(argv[1], "-forecast")) == 0) {
-            get_city_name(city_num, FILE_NAME);
             get_weather_default(WEATHER_FORECAST);
         } else if ((strcmp(argv[1], "-hourly")) == 0) {
-            get_weather(city_num, FILE_NAME);
             get_weather_default(WEATHER_HOURLY);
-        } else if((strcmp(argv[1],"-lifestyle"))==0){
-            get_weather(city_num, FILE_NAME);
+        } else if ((strcmp(argv[1], "-lifestyle")) == 0) {
             get_weather_default(WEATHER_LIFESTYLE);
         }
     }
@@ -111,6 +97,5 @@ int main(int argc, char *argv[]) {
             set_city_name(argv[2], FILE_NAME);
         }
     }
-    free(city_num);
     return 0;
 }
