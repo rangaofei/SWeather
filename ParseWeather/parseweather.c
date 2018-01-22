@@ -66,9 +66,9 @@ void show_update_info(cJSON *update_time, int loc) {
         printf("|");
         print_space(LINE_NUM / 2 - 10 - 17);
         print_time();
-        printf(" |");
+        printf(" | ");
         printf(UPDATE_TIME, cJSON_GetObjectItem(update_time, "loc")->valuestring);
-        print_space(LINE_NUM / 2 - 10 - 17);
+        print_space(LINE_NUM / 2 - 10 - 18);
         printf(" |\n");
     } else {
 
@@ -185,8 +185,8 @@ void show_now_header() {
     printf(" %s |", "温  度");
     printf(" %s |", "天  气");
     printf(" %s |", "风 向 角");
-    printf(" %s |", "风  向");
-    printf(" %s |", "风    力");
+    printf(" %s |", " 风  向 ");
+    printf(" %s |", "风  力");
     printf(" %s |", "风  速");
     printf(" %s |", "相对湿度");
     printf(" %s |", "降 水 量");
@@ -202,8 +202,8 @@ void show_now_info(cJSON *weather_now) {
     print_center_mix(8, cJSON_GetObjectItem(weather_now, "tmp")->valuestring);
     print_center_mix(8, cJSON_GetObjectItem(weather_now, "cond_txt")->valuestring);
     print_center_mix(10, cJSON_GetObjectItem(weather_now, "wind_deg")->valuestring);
-    print_center_mix(8, cJSON_GetObjectItem(weather_now, "wind_dir")->valuestring);
-    print_center_mix(10, cJSON_GetObjectItem(weather_now, "wind_sc")->valuestring);
+    print_center_mix(10, cJSON_GetObjectItem(weather_now, "wind_dir")->valuestring);
+    print_center_mix(8, cJSON_GetObjectItem(weather_now, "wind_sc")->valuestring);
     print_center_mix(8, cJSON_GetObjectItem(weather_now, "wind_spd")->valuestring);
     print_center_mix(10, cJSON_GetObjectItem(weather_now, "hum")->valuestring);
     print_center_mix(10, cJSON_GetObjectItem(weather_now, "pcpn")->valuestring);
@@ -224,8 +224,8 @@ void show_hourly_header() {
     printf(" %s |", "温 度");
     printf(" %s |", "  天 气  ");
     printf(" %s |", "风向角");
-    printf(" %s |", "风  向");
-    printf(" %s |", "  风  力  ");
+    printf(" %s |", " 风  向 ");
+    printf(" %s |", "  风力  ");
     printf(" %s |", "风 速");
     printf(" %s |", "相对湿度");
     printf(" %s |", "大气压强");
@@ -243,8 +243,8 @@ void show_hourly_info(cJSON *weather_hourly) {
         print_center_mix(7, cJSON_GetObjectItem(item, "tmp")->valuestring);
         print_center_mix(11, cJSON_GetObjectItem(item, "cond_txt")->valuestring);
         print_center_mix(8, cJSON_GetObjectItem(item, "wind_deg")->valuestring);
-        print_center_mix(8, cJSON_GetObjectItem(item, "wind_dir")->valuestring);
-        print_center_mix(12, cJSON_GetObjectItem(item, "wind_sc")->valuestring);
+        print_center_mix(10, cJSON_GetObjectItem(item, "wind_dir")->valuestring);
+        print_center_mix(10, cJSON_GetObjectItem(item, "wind_sc")->valuestring);
         print_center_mix(7, cJSON_GetObjectItem(item, "wind_spd")->valuestring);
         print_center_mix(10, cJSON_GetObjectItem(item, "hum")->valuestring);
         print_center_mix(10, cJSON_GetObjectItem(item, "pres")->valuestring);
