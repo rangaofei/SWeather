@@ -131,7 +131,7 @@ void show_forecast_header() {
     print_line(LINE_NUM);
     printf("|");
     print_space(4);
-    printf("%s", "三日");
+    printf("%s", "七日");
     print_space(4);
     printf("|");
 
