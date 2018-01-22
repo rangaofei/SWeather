@@ -3,7 +3,7 @@ project(SWeather)
 # set the version
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 1)
-set(VERSION_PATCH 5)
+set(VERSION_PATCH 6)
 
 include(${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
 include(${CMAKE_ROOT}/Modules/FindOpenSSL.cmake)
@@ -19,7 +19,7 @@ set(CMAKE_C_STANDARD 99)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ")
 set(CMAKE_CXX_FLAGS_RELEASE " ${CMAKE_CXX_FLAGS_DEBUG} ")
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DENABLE_DEBUG)
