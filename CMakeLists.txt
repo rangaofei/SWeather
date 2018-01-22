@@ -5,11 +5,6 @@ set(VERSION_MAJOR 1)
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 6)
 
-include(${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
-include(${CMAKE_ROOT}/Modules/FindOpenSSL.cmake)
-check_symbol_exists(curl ${CMAKE_SYSTEM_LIBRARY_PATH} HAVE_CURL)
-
-
 configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"
         "${PROJECT_BINARY_DIR}/SimpleWeatherConfigure.h"
@@ -39,7 +34,6 @@ add_subdirectory(Location)
 set(SOURCE_FILES main.c)
 add_executable(sweather ${SOURCE_FILES})
 
-SET(OPENSSL_DIR /usr/local/bin)
 FIND_PACKAGE(CURL)
 IF (CURL_FOUND)
     MESSAGE(STATUS ${CURL_LIBRARY})
