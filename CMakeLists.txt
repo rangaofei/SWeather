@@ -3,7 +3,7 @@ project(SWeather)
 # set the version
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 1)
-set(VERSION_PATCH 4)
+set(VERSION_PATCH 5)
 
 include(${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
 include(${CMAKE_ROOT}/Modules/FindOpenSSL.cmake)
@@ -76,7 +76,7 @@ set(CPACK_SOURCE_IGNORE_FILES
 set(CPACK_SOURCE_PACKAGE_FILE_NAME
         sweahter-${PROJECT_VERSION_FULL})
 
-set(CPACK_SOURCE_GENERATOR "TGZ ")
+set(CPACK_SOURCE_GENERATOR "TGZ")
 include(CPack)
 
 
