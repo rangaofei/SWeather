@@ -53,6 +53,8 @@ void parseJson(char *chunk, char *type) {
             show_weather(item, 1, 0, 0, 1, 0, 1);
         } else if (strcmp(type, WEATHER_LIFESTYLE) == 0) {
             show_weather(item, 1, 0, 0, 0, 1, 1);
+        } else if (strcmp(type, AIR_DEFAULT) == 0) {
+            show_air(item, 1, 1, 1);
         }
     }
     if (root) {
@@ -117,5 +119,9 @@ int get_weather_default(char *style) {
             break;
     }
     free(location_num);
+    return 0;
+}
+
+int get_air_default(char *style) {
     return 0;
 }

@@ -17,3 +17,5 @@ void show_basic_info(cJSON *basic, int full);
 
 void show_weather(cJSON *data, int show_basic, int show_forecast, int show_now,
                   int show_hourly, int show_lifestyle, int show_time);
+
+void show_air(cJSON *air, int show_basic, int show_air, int show_time);

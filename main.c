@@ -87,12 +87,18 @@ int main(int argc, char *argv[]) {
             get_weather_default(WEATHER_HOURLY);
         } else if ((strcmp(argv[1], "-lifestyle")) == 0) {
             get_weather_default(WEATHER_LIFESTYLE);
+        } else if ((strcmp(argv[1], "-air")) == 0) {
+            get_weather_default(AIR_DEFAULT);
+        } else if ((strcmp(argv[1], "-airnow")) == 0) {
+            get_weather_default(AIR_NOW);
         }
     }
 
     if (argc == 3) {
         if ((strcmp(argv[1], "-loc") == 0)) {
             get_weather(WEATHER_DEFAULT, argv[2]);
+        } else if (strcmp(argv[1],"-air")==0) {
+            get_weather(AIR_DEFAULT,argv[2]);
         } else if (strcmp(argv[1], "-setloc") == 0) {
             set_city_name(argv[2], FILE_NAME);
         }

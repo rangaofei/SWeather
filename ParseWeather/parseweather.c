@@ -52,10 +52,11 @@ char *get_temp_range(cJSON *data) {
 void print_time(void) {
     time_t timep;
     struct tm *p;
-    timep=time(&timep);
+    time(&timep);
     p = localtime(&timep); //此函数获得的tm结构体的时间，是已经进行过时区转化为本地时间
     printf("当前时间：%d-%02d-%02d %02d:%02d",
            1900 + p->tm_year, 1 + p->tm_mon, p->tm_mday, p->tm_hour, p->tm_min);
+    free(p);
 }
 
 //打印更新时间字段--"update"
@@ -345,3 +346,59 @@ void show_weather(cJSON *data, int show_basic, int show_forecast, int show_now,
     }
     print_line(LINE_NUM);
 }
+
+void show_air_header() {
+    print_line(LINE_NUM);
+    printf("|");
+    print_center_mix(LINE_NUM, "AQI城市实况");
+    printf("\n");
+    print_line(LINE_NUM);
+    printf("|");
+    print_center_mix(18, "更新时间");
+    print_center_mix(14, "空气质量指数");
+    print_center_mix(12, "主要污染物");
+    print_center_mix(10, "空气质量");
+    print_center_mix(10, "PM10含量");
+    print_center_mix(10, "PM25含量");
+    print_center_mix(10, "二氧化氮");
+    print_center_mix(10, "二氧化硫");
+    print_center_mix(10, "一氧化碳");
+    print_center_mix(6, "臭氧");
+    printf("\n");
+}
+
+void show_air_info(cJSON *data) {
+    print_line(LINE_NUM);
+    printf("|");
+    print_center_mix(18, cJSON_GetObjectItem(data, "pub_time")->valuestring);
+    print_center_mix(14, cJSON_GetObjectItem(data, "aqi")->valuestring);
+    print_center_mix(12, cJSON_GetObjectItem(data, "main")->valuestring);
+    print_center_mix(10, cJSON_GetObjectItem(data, "qlty")->valuestring);
+    print_center_mix(10, cJSON_GetObjectItem(data, "pm10")->valuestring);
+    print_center_mix(10, cJSON_GetObjectItem(data, "pm25")->valuestring);
+    print_center_mix(10, cJSON_GetObjectItem(data, "no2")->valuestring);
+    print_center_mix(10, cJSON_GetObjectItem(data, "so2")->valuestring);
+    print_center_mix(10, cJSON_GetObjectItem(data, "co")->valuestring);
+    print_center_mix(6, cJSON_GetObjectItem(data, "o3")->valuestring);
+    printf("\n");
+}
+
+void show_air(cJSON *air, int show_basic, int show_air, int show_time) {
+    if (show_basic) {
+        if (cJSON_GetObjectItem(air, "basic") != NULL) {
+            show_basic_info(cJSON_GetObjectItem(air, "basic"), 0);
+        }
+    }
+    if (show_air) {
+        if (cJSON_GetObjectItem(air, "air_now_city") != NULL) {
+            show_air_header();
+            show_air_info(cJSON_GetObjectItem(air, "air_now_city"));
+        }
+    }
+    if (show_time) {
+        if (cJSON_GetObjectItem(air, "update") != NULL) {
+            show_update_info(cJSON_GetObjectItem(air, "update"), 1);
+        }
+    }
+    print_line(LINE_NUM);
+};
