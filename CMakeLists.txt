@@ -6,7 +6,7 @@ set(VERSION_MINOR 1)
 set(VERSION_PATCH 4)
 
 include(${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
-
+include(${CMAKE_ROOT}/Modules/FindOpenSSL.cmake)
 check_symbol_exists(curl ${CMAKE_SYSTEM_LIBRARY_PATH} HAVE_CURL)
 
 
@@ -19,12 +19,11 @@ set(CMAKE_C_STANDARD 99)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ")
 set(CMAKE_CXX_FLAGS_RELEASE " ${CMAKE_CXX_FLAGS_DEBUG} ")
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DENABLE_DEBUG)
 ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
-
 
 
 include_directories(${PROJECT_SOURCE_DIR})
@@ -40,12 +39,13 @@ add_subdirectory(Location)
 set(SOURCE_FILES main.c)
 add_executable(sweather ${SOURCE_FILES})
 
+SET(OPENSSL_DIR /usr/local/bin)
 FIND_PACKAGE(CURL)
 IF (CURL_FOUND)
     MESSAGE(STATUS ${CURL_LIBRARY})
     INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
     target_link_libraries(sweather ${CURL_LIBRARIES})
-ELSE (NOT CURL_FOUNT)
+ELSE (NOT CURL_FOUND)
     MESSAGE(FATAL_ERROR "CURL library not found,please install")
 ENDIF (CURL_FOUND)
 
