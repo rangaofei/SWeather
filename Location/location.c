@@ -19,7 +19,7 @@ FILE_STATE get_default_num(char *num) {
     if (f == NULL) {
         return NOT_FOUND;
     }
-    fread(num, 1, 11, f);
+    int size=(int)fread(num, 1, 11, f);
     fclose(f);
     status = regex_match_result(num);
     if (status != 0) {

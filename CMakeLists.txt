@@ -5,6 +5,11 @@ set(VERSION_MAJOR 1)
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 4)
 
+include(${CMAKE_ROOT}/Modules/CheckSymbolExists.cmake)
+
+check_symbol_exists(curl ${CMAKE_SYSTEM_LIBRARY_PATH} HAVE_CURL)
+
+
 configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"
         "${PROJECT_BINARY_DIR}/SimpleWeatherConfigure.h"
@@ -13,11 +18,14 @@ configure_file(
 set(CMAKE_C_STANDARD 99)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} ")
+set(CMAKE_CXX_FLAGS_RELEASE " ${CMAKE_CXX_FLAGS_DEBUG} ")
 set(CMAKE_BUILD_TYPE Release)
+
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DENABLE_DEBUG)
 ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
+
+
 
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/CJson)
@@ -31,13 +39,23 @@ add_subdirectory(GetWeather)
 add_subdirectory(Location)
 set(SOURCE_FILES main.c)
 add_executable(sweather ${SOURCE_FILES})
-target_link_libraries(sweather libcurl.dylib location)
+
+FIND_PACKAGE(CURL)
+IF (CURL_FOUND)
+    MESSAGE(STATUS ${CURL_LIBRARY})
+    INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIR})
+    target_link_libraries(sweather ${CURL_LIBRARIES})
+ELSE (NOT CURL_FOUNT)
+    MESSAGE(FATAL_ERROR "CURL library not found,please install")
+ENDIF (CURL_FOUND)
+
+target_link_libraries(sweather location)
 target_link_libraries(sweather mycjson)
 target_link_libraries(sweather parseweather)
 target_link_libraries(sweather getweather)
 
 install(TARGETS sweather DESTINATION bin)
-install(FILES "${PROJECT_BINARY_DIR}/SimpleWeatherConfigure.h" DESTINATION include)
+install(FILES " ${PROJECT_BINARY_DIR}/SimpleWeatherConfigure.h" DESTINATION include)
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_DIRECTORY ${PROJECT_SOURCE_DIR}/pack)
@@ -58,7 +76,7 @@ set(CPACK_SOURCE_IGNORE_FILES
 set(CPACK_SOURCE_PACKAGE_FILE_NAME
         sweahter-${PROJECT_VERSION_FULL})
 
-set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_GENERATOR "TGZ ")
 include(CPack)
 
 
