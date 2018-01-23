@@ -3,7 +3,7 @@ project(SWeather)
 # set the version
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 1)
-set(VERSION_PATCH 8)
+set(VERSION_PATCH 9)
 
 configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"
@@ -12,7 +12,7 @@ configure_file(
 
 set(CMAKE_C_STANDARD 99)
 
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DENABLE_DEBUG)

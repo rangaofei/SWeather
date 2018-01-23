@@ -56,7 +56,6 @@ void print_time(void) {
     p = localtime(&timep); //此函数获得的tm结构体的时间，是已经进行过时区转化为本地时间
     printf("当前时间：%d-%02d-%02d %02d:%02d",
            1900 + p->tm_year, 1 + p->tm_mon, p->tm_mday, p->tm_hour, p->tm_min);
-    free(p);
 }
 
 //打印更新时间字段--"update"
