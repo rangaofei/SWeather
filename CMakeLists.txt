@@ -18,7 +18,6 @@ IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DENABLE_DEBUG)
 ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
 
-
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/CJson)
 include_directories(${PROJECT_SOURCE_DIR}/ParseWeather)
