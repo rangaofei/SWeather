@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.8)
 project(SWeather)
 # set the version
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 1)
-set(VERSION_PATCH 9)
+set(VERSION_MINOR 2)
+set(VERSION_PATCH 0)
 
 configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"

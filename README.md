@@ -43,3 +43,7 @@ sweather -lifestyle
 ```
 sweather -hourly
 ```
+2.6 查看地址信息
+````
+sweather -loc
+````
