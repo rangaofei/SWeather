@@ -81,7 +81,6 @@ void get_weather(char *weather_style, char *location) {
     if (loc == NULL) {
         return;
     }
-    printf("%s\n",loc);
     CURL *curl;
     CURLcode res;
     struct WeatherBody chunk;

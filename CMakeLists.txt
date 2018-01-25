@@ -3,7 +3,7 @@ project(SWeather)
 # set the version
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 2)
-set(VERSION_PATCH 0)
+set(VERSION_PATCH 1)
 
 configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"
