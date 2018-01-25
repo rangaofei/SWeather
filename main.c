@@ -28,12 +28,14 @@ int main(int argc, char *argv[]) {
             get_weather_default(AIR_DEFAULT);
         } else if ((strcmp(argv[1], "-airnow")) == 0) {
             get_weather_default(AIR_NOW);
+        } else if (argv[1][0] != '-') {
+            get_weather(WEATHER_DEFAULT, argv[1]);
         }
     }
 
     if (argc == 3) {
         if ((strcmp(argv[1], "-loc") == 0)) {
-            get_weather(WEATHER_DEFAULT, argv[2]);
+            get_location(argv[2]);
         } else if (strcmp(argv[1], "-air") == 0) {
             get_weather(AIR_DEFAULT, argv[2]);
         } else if (strcmp(argv[1], "-setloc") == 0) {

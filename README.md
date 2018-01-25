@@ -21,11 +21,12 @@ sweather -setloc <area/city>
 ```
 2.2 查看天气
 ```
-sweather
+sweather [address]
 ```
-显示包括三天天气、实况天气、逐小时预报、生活指数、更新时间等信息。
+显示包括七天天气、实况天气、逐小时预报、生活指数、更新时间等信息。
 
-2.2 查看三天天气
+直接输入sweather显示默认地区的天气。后边跟上开头不是'-'字符串，直接搜索对应地址的天气
+2.2 查看七天天气
 
 ```
 sweather -forecast
@@ -45,5 +46,6 @@ sweather -hourly
 ```
 2.6 查看地址信息
 ````
-sweather -loc
+sweather -loc [address]
 ````
+直接输入-loc显示默认地址信息，后边接地址显示所有包含该地址的信息

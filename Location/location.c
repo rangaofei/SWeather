@@ -1,6 +1,8 @@
 #include "ParseWeather/tool.h"
 #include "location.h"
 
+#define LINE_NUM 86
+
 LocationArray *get_target_cities(char *city_info) {
     FILE *city_list = fopen(FILE_LIST, "r");
     if (city_list == NULL) {
@@ -40,7 +42,6 @@ LocationArray *get_target_cities(char *city_info) {
     return result;
 }
 
-#define LINE_NUM 86
 
 void show_loc_header() {
     print_line(LINE_NUM);
@@ -98,6 +99,16 @@ void show_default_location() {
         free(locationArray);
     }
     free(num);
+}
+
+void get_location(char *location) {
+    LocationArray *locationArray = get_target_cities(location);
+    if (locationArray == NULL) {
+        printf("您输入的地址有误：%s", location);
+        return;
+    }
+    show_location_info_full(locationArray);
+    free(locationArray);
 }
 
 

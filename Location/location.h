@@ -28,8 +28,8 @@ typedef struct {
     char province_cn[10];
     char pcity_en[30];
     char pcity_cn[30];
-    char lat[10];
-    char lon[10];
+    char lat[12];
+    char lon[12];
 } Location;
 
 typedef struct {
@@ -47,5 +47,7 @@ FILE_STATE get_default_num(char *num);
 int regex_match_result(char *des);
 
 void set_city_name(char *city_num);
+
+void get_location(char *location);
 
 void show_default_location();
