@@ -141,7 +141,7 @@ char *check_location(char *location) {
             scanf("%d", &num);
             fflush(stdin);
         }
-        strcpy(result, (locationArray->location)[num].area_num);
+        strcpy(result, (locationArray->location)[num-1].area_num);
     } else {
         strcpy(result, location);
     }
