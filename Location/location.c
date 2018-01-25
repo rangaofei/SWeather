@@ -45,7 +45,7 @@ LocationArray *get_target_cities(char *city_info) {
 
 void show_loc_info_simple(LocationArray *locationArray) {
     for (int i = 0; i < locationArray->length; i++) {
-        printf("%2d: %9s-%9s-%9s\n", i + 1, locationArray->location[i].area_cn,
+        printf("%2d: %s-%s-%s\n", i + 1, locationArray->location[i].area_cn,
                locationArray->location[i].pcity_cn, locationArray->location[i].province_cn);
     }
 }
@@ -99,8 +99,11 @@ void show_default_location() {
             locationArray = get_target_cities(num);
             show_location_info_full(locationArray);
             break;
-        default:
-            printf("default");
+        case NOT_FOUND:
+            printf("请输入\n\tsweather -setloc <address>\n来设置默认城市");
+            break;
+        case TYPE_INCORRECT:
+            printf("获取配置文件错误");
             break;
     }
     if (locationArray != NULL) {

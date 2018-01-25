@@ -117,7 +117,7 @@ int get_weather_default(char *style) {
             get_weather(style, location_num);
             break;
         case NOT_FOUND:
-            printf("请输入\n\tsweather -setloc XXX\n来设置默认城市");
+            printf("请输入\n\tsweather -setloc <address>\n来设置默认城市");
             break;
         case TYPE_INCORRECT:
             printf("获取配置文件错误");
