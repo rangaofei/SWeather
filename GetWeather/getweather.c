@@ -88,7 +88,7 @@ void get_weather(char *weather_style, char *location) {
     chunk.size = 0;
     curl = curl_easy_init();
     if (curl) {
-        char *url = target_url(weather_style, location);
+        char *url = target_url(weather_style, loc);
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5L);
