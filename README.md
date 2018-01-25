@@ -8,7 +8,8 @@
 ```
 brew tap rangaofei/saka
 ```
-[](https://github.com/rangaofei/SWeather/blob/master/PIC/1.png)
+
+![](https://raw.githubusercontent.com/rangaofei/SWeather/master/PIC/1.png)
 
 然后安装该项目
 ```
