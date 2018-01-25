@@ -1,9 +1,10 @@
+
 #include "ParseWeather/tool.h"
 #include "location.h"
 
 #define LINE_NUM 86
 
-LocationArray *get_target_cities(char *city_info) {
+LocationArray *get_target_cities(char *city_info, int show_item) {
     FILE *city_list = fopen(FILE_LIST, "r");
     if (city_list == NULL) {
         printf("未找到城市列表，请重新下载文件%s", FILE_LIST);
@@ -30,6 +31,9 @@ LocationArray *get_target_cities(char *city_info) {
                    locations[i].lat,
                    locations[i].lon
             );
+            if (show_item) {
+                printf("%2d: %s-%s\n", i + 1, locations[i].area_cn, locations[i].pcity_cn);
+            }
             ++i;
         }
     }
@@ -89,7 +93,7 @@ void show_default_location() {
     LocationArray *locationArray = NULL;
     switch (state) {
         case SUCCESS:
-            locationArray = get_target_cities(num);
+            locationArray = get_target_cities(num, 0);
             show_location_info_full(locationArray);
             break;
         default:
@@ -102,7 +106,7 @@ void show_default_location() {
 }
 
 void get_location(char *location) {
-    LocationArray *locationArray = get_target_cities(location);
+    LocationArray *locationArray = get_target_cities(location, 0);
     if (locationArray == NULL) {
         printf("您输入的地址有误：%s", location);
         return;
@@ -111,6 +115,31 @@ void get_location(char *location) {
     free(locationArray);
 }
 
+char *check_location(char *location) {
+    char *result = calloc(12, sizeof(char));
+    LocationArray *locationArray = get_target_cities(location, 1);
+    if (locationArray == NULL) {
+        printf("输入的地址信息有误:%s", location);
+        return NULL;
+    }
+    int num;
+    if (locationArray->length > 1) {
+        printf("共搜索到%d个城市，列表展示格式为\"区-市-省\"\n", locationArray->length);
+        printf("请输入您要选择的城市序号：");
+        scanf("%d", &num);
+        fflush(stdin);
+        while ((num - 1) > locationArray->length || (num - 1) < 0) {
+            printf("您输入的编号错误,请重新输入：");
+            scanf("%d", &num);
+            fflush(stdin);
+        }
+        strcpy(result, (locationArray->location)[num].area_num);
+    } else {
+        strcpy(result, location);
+    }
+    free(locationArray);
+    return result;
+}
 
 /**
  * 获取默认地址

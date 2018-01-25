@@ -49,5 +49,6 @@ int regex_match_result(char *des);
 void set_city_name(char *city_num);
 
 void get_location(char *location);
+char *check_location(char *location);
 
 void show_default_location();

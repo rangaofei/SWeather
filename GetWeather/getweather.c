@@ -77,6 +77,11 @@ char *target_url(const char *style, const char *location) {
 }
 
 void get_weather(char *weather_style, char *location) {
+    char *loc = check_location(location);
+    if (loc == NULL) {
+        return;
+    }
+    printf("%s\n",loc);
     CURL *curl;
     CURLcode res;
     struct WeatherBody chunk;
@@ -102,6 +107,7 @@ void get_weather(char *weather_style, char *location) {
         free(url);
         curl_global_cleanup();
     }
+    free(loc);
 }
 
 int get_weather_default(char *style) {
