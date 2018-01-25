@@ -1,6 +1,6 @@
 # SWeather
 一个非常简单的命令行客户端，接口采用的是和风天气接口，感谢。
-1. 安装
+### 1. 安装
 
 > 本项目目前只支持homebrew获取方式。
 
@@ -8,11 +8,14 @@
 ```
 brew tap rangaofei/saka
 ```
+[](https://github.com/rangaofei/SWeather/blob/master/PIC/1.png)
+
 然后安装该项目
 ```
 brew install sweather
 ```
-2.使用
+### 2. 使用
+
 2.1 设置地区
 
 目前支持到区县级别
