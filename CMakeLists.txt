@@ -41,10 +41,9 @@ IF (CURL_FOUND)
 ELSE (NOT CURL_FOUND)
     MESSAGE(FATAL_ERROR "CURL library not found,please install")
 ENDIF (CURL_FOUND)
-target_link_libraries(sweather mycjson)
+
 target_link_libraries(sweather location)
 
-target_link_libraries(sweather parseweather)
 target_link_libraries(sweather getweather)
 
 install(TARGETS sweather DESTINATION bin)
