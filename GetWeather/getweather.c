@@ -1,6 +1,6 @@
 #include <curl/curl.h>
 #include <memory.h>
-#include <CJson/cJSON.h>
+#include "cJSON.h"
 #include "getweather.h"
 #include "Location/location.h"
 
@@ -65,7 +65,7 @@ void parseJson(char *chunk, char *type) {
 char *target_url(const char *style, const char *location) {
     char *str = (char *) malloc(150);
     strcpy(str, BASE_URL);
-    strncat (str, style, strlen(style));
+    strncat(str, style, strlen(style));
     strcat(str, LOCATION_PRE);
     if (location != NULL) {
         strcat(str, location);

@@ -9,7 +9,9 @@ configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"
         "${PROJECT_BINARY_DIR}/SimpleWeatherConfigure.h"
 )
+SET(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
 
+MESSAGE(STATUS ${CMAKE_C_KNOWN_FEATURES})
 set(CMAKE_C_STANDARD 99)
 
 #set(CMAKE_BUILD_TYPE Debug)
@@ -39,9 +41,9 @@ IF (CURL_FOUND)
 ELSE (NOT CURL_FOUND)
     MESSAGE(FATAL_ERROR "CURL library not found,please install")
 ENDIF (CURL_FOUND)
-
-target_link_libraries(sweather location)
 target_link_libraries(sweather mycjson)
+target_link_libraries(sweather location)
+
 target_link_libraries(sweather parseweather)
 target_link_libraries(sweather getweather)
 
