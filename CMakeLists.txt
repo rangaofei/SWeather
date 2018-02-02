@@ -1,9 +1,13 @@
 cmake_minimum_required(VERSION 3.8)
-project(SWeather)
+project(SWeather C)
 # set the version
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 2)
-set(VERSION_PATCH 4)
+set(VERSION_PATCH 5)
+
+#setl oop on
+set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS ON)
+
 
 configure_file(
         "${PROJECT_SOURCE_DIR}/SimpleWeatherConfigure.h.in"
@@ -12,18 +16,17 @@ configure_file(
 
 set(CMAKE_C_STANDARD 99)
 
-#set(CMAKE_BUILD_TYPE Debug)
-
+#采用debug模式时启用'ENABLE_DEBUG'
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
     ADD_DEFINITIONS(-DENABLE_DEBUG)
 ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
 
 include_directories(${PROJECT_SOURCE_DIR})
-include_directories(${PROJECT_SOURCE_DIR}/CJson)
-include_directories(${PROJECT_SOURCE_DIR}/ParseWeather)
+#include_directories(${PROJECT_SOURCE_DIR}/CJson)
+#include_directories(${PROJECT_SOURCE_DIR}/ParseWeather)
 include_directories(${PROJECT_BINARY_DIR})
-include_directories(${PROJECT_SOURCE_DIR}/GetWeather)
-include_directories(${PROJECT_SOURCE_DIR}/Location)
+#include_directories(${PROJECT_SOURCE_DIR}/GetWeather)
+#include_directories(${PROJECT_SOURCE_DIR}/Location)
 add_subdirectory(CJson)
 add_subdirectory(ParseWeather)
 add_subdirectory(GetWeather)
@@ -56,7 +59,8 @@ set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 set(PROJECT_VERSION_FULL ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 set(CPACK_SOURCE_IGNORE_FILES
-        ${PROJECT_SOURCE_DIR}/build
+
+        build
         ${PROJECT_SOURCE_DIR}/cmake-build-debug
         ${PROJECT_SOURCE_DIR}/pack
         ${PROJECT_SOURCE_DIR}/.idea
