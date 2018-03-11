@@ -23,13 +23,13 @@ set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
 set(PROJECT_VERSION_FULL ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 set(CPACK_SOURCE_IGNORE_FILES
         ${PROJECT_SOURCE_DIR}/build
-        ${PROJECT_SOURCE_DIR}//cmake-build-debug
-        ${PROJECT_SOURCE_DIR}//pack
+        ${PROJECT_SOURCE_DIR}/cmake-build-debug
+        ${PROJECT_SOURCE_DIR}/pack
         ${PROJECT_SOURCE_DIR}//.idea
         ${PROJECT_SOURCE_DIR}/.DS_Store
         ${PROJECT_SOURCE_DIR}/.git
-        ${PROJECT_SOURCE_DIR}//.gitignore
-        ${PROJECT_SOURCE_DIR}//assets/city.txt)
+        ${PROJECT_SOURCE_DIR}/.gitignore
+        ${PROJECT_SOURCE_DIR}/assets/city.txt)
 
 set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME sweather-${PROJECT_VERSION_FULL})

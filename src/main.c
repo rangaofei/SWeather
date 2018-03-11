@@ -8,12 +8,7 @@ int main(int argc, char *argv[]) {
     }
     if (argc == 2) {
         if ((strcmp(argv[1], "-v") == 0) || strcmp(argv[1], "-version") == 0) {
-            printf("SimpleWeather --version\n%d.%d\n",
-                   VERSION_MAJOR, VERSION_MINOR);
-            printf("Curl --version\n    %s\n",
-                   curl_version());
-            printf("cJSON --info\n    %s\n",
-                   "https://github.com/DaveGamble/cJSON");
+            SHOW_VERSION;
         } else if ((strcmp(argv[1], "-loc")) == 0) {
             show_default_location();
         } else if ((strcmp(argv[1], "-now") == 0)) {
