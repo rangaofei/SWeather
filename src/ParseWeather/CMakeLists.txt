@@ -1,5 +1,5 @@
 add_library(parseweather parseweather.c printweather.c tool.c)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(.)
 #install(TARGETS parseweather DESTINATION bin)
 #install(FILES parseweather.h DESTINATION include)
 #install(FILES printweather.h DESTINATION include)
