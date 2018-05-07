@@ -1,5 +1,6 @@
 #include <CJson/cJSON.h>
 #include <time.h>
+#include <strcut_info.h>
 #include "parseweather.h"
 /**
  * +----------------------------------------------------------------------------------+
@@ -300,8 +301,8 @@ void show_lifestyle_info(cJSON *lifestyle) {
         type = get_type(item);
         printf("|");
         print_center_mix(14, type);
-        print_center_mix(10, cJSON_GetObjectItem(item, "brf")->valuestring);
-        print_center_mix(LINE_NUM - 10 - 16, cJSON_GetObjectItem(item, "txt")->valuestring);
+//        print_center_mix(10, cJSON_GetObjectItem(item, "brf").valuestring);
+        print_center_mix(LINE_NUM - 15, cJSON_GetObjectItem(item, "txt")->valuestring);
         printf("\n");
     }
 }
@@ -362,7 +363,7 @@ void show_air_header() {
     print_center_mix(10, "二氧化氮");
     print_center_mix(10, "二氧化硫");
     print_center_mix(10, "一氧化碳");
-    print_center_mix(6, "臭氧");
+    print_center_mix(7, "臭氧");
     printf("\n");
 }
 
@@ -378,7 +379,7 @@ void show_air_info(cJSON *data) {
     print_center_mix(10, cJSON_GetObjectItem(data, "no2")->valuestring);
     print_center_mix(10, cJSON_GetObjectItem(data, "so2")->valuestring);
     print_center_mix(10, cJSON_GetObjectItem(data, "co")->valuestring);
-    print_center_mix(6, cJSON_GetObjectItem(data, "o3")->valuestring);
+    print_center_mix(7, cJSON_GetObjectItem(data, "o3")->valuestring);
     printf("\n");
 }
 
@@ -400,4 +401,16 @@ void show_air(cJSON *air, int show_basic, int show_air, int show_time) {
         }
     }
     print_line(LINE_NUM);
+}
+
+void show_weather_by_args(cJSON *data, WeatherArgs *weatherArgs) {
+    if (weatherArgs->full_info) {
+        show_weather(data, 1, 1, 1, 1, 1, 1);
+    } else {
+        show_weather(data, 1, weatherArgs->forecast, weatherArgs->now, weatherArgs->hourly, weatherArgs->lifestyle, 1);
+    }
 };
+
+void show_air_by_args(cJSON *data) {
+    show_air(data, 1, 1, 1);
+}

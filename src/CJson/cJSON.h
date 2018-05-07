@@ -20,11 +20,11 @@
   THE SOFTWARE.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
+
 #ifndef cJSON__h
 #define cJSON__h
-
+#include <stdio.h>
+#include <stdlib.h>
 #ifdef __cplusplus
 extern "C"
 {

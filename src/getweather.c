@@ -1,14 +1,16 @@
-#include <curl/curl.h>
-#include <memory.h>
-#include <CJson/cJSON.h>
+
 #include "getweather.h"
-#include "Location/location.h"
+#include "location.h"
+#include "log_info.h"
+#include <stdlib.h>
+#include <memory.h>
+#include <ParseWeather/parseweather.h>
+#include <curl/curl.h>
 
 const char *BASE_URL = "https://free-api.heweather.com/s6/";
 const char *LOCATION_PRE = "?location=";
 const char *DEFAULT_CITY = "CN101190207";
 const char *KEY = "&&key=cae08893742340e88cdaeab71d603761";
-
 
 struct WeatherBody {
     char *memory;
@@ -21,7 +23,6 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     struct WeatherBody *mem = (struct WeatherBody *) userp;
     mem->memory = realloc(mem->memory, mem->size + realsize + 1);
     if (mem->memory == NULL) {
-        /* out of memory! */
         printf("not enough memory (realloc returned NULL)\n");
         return 0;
     }
@@ -31,8 +32,7 @@ WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     return realsize;
 }
 
-
-void parseJson(char *chunk, char *type) {
+void parseJson(char *chunk, WeatherArgs *weatherArgs, bool isForecast) {
     cJSON *root = cJSON_Parse(chunk);
     cJSON *body_list = cJSON_GetObjectItem(root, "HeWeather6");
     int length = cJSON_GetArraySize(body_list);
@@ -43,18 +43,10 @@ void parseJson(char *chunk, char *type) {
             printf("发生错误，请稍后重试");
             continue;
         }
-        if (strcmp(type, WEATHER_NOW) == 0) {
-            show_weather(item, 1, 0, 1, 0, 0, 1);
-        } else if (strcmp(type, WEATHER_FORECAST) == 0) {
-            show_weather(item, 1, 1, 0, 0, 0, 1);
-        } else if (strcmp(type, WEATHER_DEFAULT) == 0) {
-            show_weather(item, 1, 1, 1, 1, 1, 1);
-        } else if (strcmp(type, WEATHER_HOURLY) == 0) {
-            show_weather(item, 1, 0, 0, 1, 0, 1);
-        } else if (strcmp(type, WEATHER_LIFESTYLE) == 0) {
-            show_weather(item, 1, 0, 0, 0, 1, 1);
-        } else if (strcmp(type, AIR_DEFAULT) == 0) {
-            show_air(item, 1, 1, 1);
+        if (isForecast) {
+            show_weather_by_args(item, weatherArgs);
+        } else {
+            show_air_by_args(item);
         }
     }
     if (root) {
@@ -62,10 +54,10 @@ void parseJson(char *chunk, char *type) {
     }
 }
 
-char *target_url(const char *style, const char *location) {
+char *target_url(const char *type, const char *location) {
     char *str = (char *) malloc(150);
     strcpy(str, BASE_URL);
-    strncat (str, style, strlen(style));
+    strncat(str, type, strlen(type));
     strcat(str, LOCATION_PRE);
     if (location != NULL) {
         strcat(str, location);
@@ -76,9 +68,8 @@ char *target_url(const char *style, const char *location) {
     return str;
 }
 
-void get_weather(char *weather_style, char *location) {
-    char *loc = check_location(location);
-    if (loc == NULL) {
+void get_weather(WeatherArgs *weatherArgs, char *type, bool isForecast) {
+    if (weatherArgs == NULL) {
         return;
     }
     CURL *curl;
@@ -88,7 +79,7 @@ void get_weather(char *weather_style, char *location) {
     chunk.size = 0;
     curl = curl_easy_init();
     if (curl) {
-        char *url = target_url(weather_style, loc);
+        char *url = target_url(type, weatherArgs->location_num);
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 5L);
@@ -96,25 +87,25 @@ void get_weather(char *weather_style, char *location) {
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) &chunk);
         res = curl_easy_perform(curl);
         if (res == CURLE_OK) {
-            parseJson(chunk.memory, weather_style);
+            parseJson(chunk.memory, weatherArgs, isForecast);
         }
         if (res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                     curl_easy_strerror(res));
+
         curl_easy_cleanup(curl);
         free(chunk.memory);
         free(url);
         curl_global_cleanup();
     }
-    free(loc);
 }
 
-int get_weather_default(char *style) {
+int get_weather_default(WeatherArgs *weatherArgs) {
     char *location_num = calloc(12, sizeof(char));
     FILE_STATE state = get_default_num(location_num);
     switch (state) {
         case SUCCESS:
-            get_weather(style, location_num);
+            get_weather(weatherArgs, WEATHER_DEFAULT, false);
             break;
         case NOT_FOUND:
             printf("请输入\n\tsweather -setloc <address>\n来设置默认城市");
@@ -129,4 +120,30 @@ int get_weather_default(char *style) {
 
 int get_air_default(char *style) {
     return 0;
+}
+
+void get_weather_by_args(WeatherArgs *weatherArgs) {
+    if (weatherArgs->set_location != NULL) {
+        set_city_name(weatherArgs->set_location, weatherArgs->location_num);
+        weatherArgs->full_info = true;
+    }
+    LOG_D("the location_num is %s\n", weatherArgs->location_num);
+    if (weatherArgs->location == NULL) {
+        FILE_STATE state = get_default_num(weatherArgs->location_num);
+        switch (state) {
+            case SUCCESS:
+                break;
+            case NOT_FOUND:
+            case TYPE_INCORRECT:
+                exit_err(ERR_ADDRESS_NOT_SET, "pinyin");
+                break;
+        }
+
+    } else {
+        check_location(weatherArgs->location, weatherArgs->location_num);
+    }
+    get_weather(weatherArgs, WEATHER_DEFAULT, true);
+    if (weatherArgs->air || weatherArgs->full_info) {
+        get_weather(weatherArgs, AIR_DEFAULT, false);
+    }
 }

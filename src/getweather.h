@@ -1,7 +1,8 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "ParseWeather/parseweather.h"
+#ifndef GET_WEATHER_H
+#define GET_WEATHER_H
 
+
+#include "strcut_info.h"
 
 #define WEATHER_NOW "weather/now"               //现在天气
 #define WEATHER_FORECAST "weather/forecast"     //3天天气
@@ -11,6 +12,11 @@
 #define AIR_NOW "air/now"                       //空气质量实况
 #define AIR_DEFAULT "air"                       //空气质量合集
 
-void get_weather(char *weather_style, char *location);
 
-int get_weather_default(char *style);
+void get_weather(WeatherArgs *weatherArgs,char *type,bool isForecast);
+
+int get_weather_default(WeatherArgs *weatherArgs);
+
+void get_weather_by_args(WeatherArgs *weatherArgs);
+
+#endif

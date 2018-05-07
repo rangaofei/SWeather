@@ -1,11 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <memory.h>
-#include <regex.h>
+#ifndef LOCATION_H
+#define LOCATION_H
+
 
 #ifdef ENABLE_DEBUG
-#define FILE_NAME "../src/city.txt"
-#define FILE_LIST "../src/china-city-list.txt"
+#define FILE_NAME "../../assets/city.txt"
+#define FILE_LIST "../../assets/china-city-list.txt"
 #else
 #define FILE_NAME "/usr/local/etc/city.txt"
 #define FILE_LIST "/usr/local/etc/china-city-list.txt"
@@ -46,12 +45,14 @@ FILE_STATE get_default_num(char *num);
 
 int regex_match_result(char *des);
 
-void set_city_name(char *city_num);
+void set_city_name(char *city_name, char *city_num);
 
 void get_location(char *location);
 
-char *check_location(char *location);
+void check_location(char *location, char *location_num);
 
 void show_loc_info_simple(LocationArray *locationArray);
 
 void show_default_location();
+
+#endif

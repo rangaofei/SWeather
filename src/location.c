@@ -1,46 +1,44 @@
 
+#include <regex.h>
+
 #include "ParseWeather/tool.h"
 #include "location.h"
+#include "log_info.h"
 
 #define LINE_NUM 86
 
-LocationArray *get_target_cities(char *city_info) {
+int get_target_cities(LocationArray *locations, char *city_info) {
     FILE *city_list = fopen(FILE_LIST, "r");
     if (city_list == NULL) {
-        printf("未找到城市列表，请重新下载文件%s", FILE_LIST);
-        return NULL;
+        exit_err(ERR_FILE_NOT_FOUND, FILE_LIST);
     }
 
-    Location *locations = calloc(ARRAY_NUM, sizeof(Location));
+    Location *location = calloc(ARRAY_NUM, sizeof(Location));
     char *target_city_num = calloc(1000, sizeof(char));
     int i = 0;
     while (!feof(city_list) && i < ARRAY_NUM) {
         fgets(target_city_num, 1000, city_list);
         if (strstr(target_city_num, city_info) != NULL) {
             sscanf(target_city_num, "%s%s%s%s%s%s%s%s%s%s%s%s",
-                   (&locations[i])->area_num,
-                   (&locations[i])->area_en,
-                   locations[i].area_cn,
-                   locations[i].country_num,
-                   locations[i].country_en,
-                   locations[i].country_cn,
-                   locations[i].province_en,
-                   locations[i].province_cn,
-                   locations[i].pcity_en,
-                   locations[i].pcity_cn,
-                   locations[i].lat,
-                   locations[i].lon
+                   location[i].area_num,
+                   location[i].area_en,
+                   location[i].area_cn,
+                   location[i].country_num,
+                   location[i].country_en,
+                   location[i].country_cn,
+                   location[i].province_en,
+                   location[i].province_cn,
+                   location[i].pcity_en,
+                   location[i].pcity_cn,
+                   location[i].lat,
+                   location[i].lon
             );
             ++i;
         }
     }
-    if (i <= 0) {
-        return NULL;
-    }
-    LocationArray *result = calloc(1, sizeof(LocationArray));
-    result->location = locations;
-    result->length = i;
-    return result;
+    locations->location = location;
+    locations->length = i;
+    return i;
 }
 
 void show_loc_info_simple(LocationArray *locationArray) {
@@ -93,10 +91,10 @@ void show_location_info_full(LocationArray *locationArray) {
 void show_default_location() {
     char *num = calloc(12, sizeof(char));
     FILE_STATE state = get_default_num(num);
-    LocationArray *locationArray = NULL;
+    LocationArray *locationArray = calloc(1, sizeof(LocationArray));
     switch (state) {
         case SUCCESS:
-            locationArray = get_target_cities(num);
+            get_target_cities(locationArray, num);
             show_location_info_full(locationArray);
             break;
         case NOT_FOUND:
@@ -113,8 +111,9 @@ void show_default_location() {
 }
 
 void get_location(char *location) {
-    LocationArray *locationArray = get_target_cities(location);
-    if (locationArray == NULL) {
+    LocationArray *locationArray = calloc(1, sizeof(LocationArray));
+    int length = get_target_cities(locationArray, location);
+    if (length <= 0) {
         printf("您输入的地址有误：%s", location);
         return;
     }
@@ -122,12 +121,12 @@ void get_location(char *location) {
     free(locationArray);
 }
 
-char *check_location(char *location) {
-    char *result = calloc(12, sizeof(char));
-    LocationArray *locationArray = get_target_cities(location);
+void check_location(char *location, char *location_num) {
+    LocationArray *locationArray = calloc(1, sizeof(LocationArray));
+    get_target_cities(locationArray, location);
     if (locationArray == NULL) {
         printf("输入的地址信息有误:%s", location);
-        return NULL;
+        return;
     }
     int num;
     if (locationArray->length > 1) {
@@ -141,12 +140,11 @@ char *check_location(char *location) {
             scanf("%d", &num);
             fflush(stdin);
         }
-        strcpy(result, (locationArray->location)[num-1].area_num);
+        strcpy(location_num, (locationArray->location)[num - 1].area_num);
     } else {
-        strcpy(result, location);
+        strcpy(location_num, location);
     }
     free(locationArray);
-    return result;
 }
 
 /**
@@ -168,9 +166,9 @@ FILE_STATE get_default_num(char *num) {
 }
 
 /********************************************
- * 正则表达式匹配地址编号                      *
- * @param src                               *
- * @return                                  *
+ * 正则表达式匹配地址编号                      
+ * @param src                               
+ * @return                                  
  ********************************************/
 int regex_match_result(char *src) {
     int state;
@@ -189,40 +187,36 @@ int regex_match_result(char *src) {
  * 将城市名称写入文件
  * @param city_num
  */
-void set_city_name(char *city_num) {
-    FILE *city_list = fopen(FILE_LIST, "r");
-    if (city_list == NULL) {
-        printf("未找到城市列表，请重新下载文件%s", FILE_LIST);
-        return;
-    }
-    LocationArray *locationArray = get_target_cities(city_num);
+void set_city_name(char *city_name, char *city_num) {
+    LOG_D("the city name is %s\n", city_name);
+    LocationArray *locationArray = calloc(1, sizeof(LocationArray));
+    int length = get_target_cities(locationArray, city_name);
     FILE *conf = fopen(FILE_NAME, "wb");
-    if (conf == NULL) {
-        printf("准备查询数据列表");
+    if (length <= 0) {
+        exit_err(ERR_ADDRESS_NOT_FOUND, city_name);
     }
-    if (locationArray == NULL || locationArray->length <= 0) {
-        printf("你输入的地址有误，请重试");
-    } else {
-        int num = 0;
-        if (locationArray->length == 1) {
-            num = 1;
-        }
-        if (locationArray->length > 1) {
-            show_loc_info_simple(locationArray);
-            printf("共搜索到%d个城市，列表展示格式为\"区-市-省\"\n", locationArray->length);
-            printf("请输入您要选择的城市序号：");
+    int num = 0;
+    if (locationArray->length == 1) {
+        num = 1;
+    }
+    if (locationArray->length > 1) {
+        show_loc_info_simple(locationArray);
+        printf("共搜索到%d个城市，列表展示格式为\"区-市-省\"\n", locationArray->length);
+        printf("请输入您要选择的城市序号：");
+        scanf("%d", &num);
+        fflush(stdin);
+        while ((num - 1) > locationArray->length || (num - 1) < 0) {
+            printf("您输入的编号错误,请重新输入：");
             scanf("%d", &num);
             fflush(stdin);
-            while ((num - 1) > locationArray->length || (num - 1) < 0) {
-                printf("您输入的编号错误,请重新输入：");
-                scanf("%d", &num);
-                fflush(stdin);
-            }
         }
-        fwrite(locationArray->location[num - 1].area_num, sizeof(char) * 11, 1, conf);
-        printf("您已设置成功，请使用命令查询天气");
     }
+    fwrite(locationArray->location[num - 1].area_num, sizeof(char) * 11, 1, conf);
+    printf("您已设置<%s-%s-%s>为默认地址\n",
+           locationArray->location[num - 1].province_cn,
+           locationArray->location[num - 1].pcity_cn,
+           locationArray->location[num - 1].area_cn);
+    memcpy(city_num, locationArray->location[num - 1].area_num, 12);
     free(locationArray);
     fclose(conf);
-    fclose(city_list);
 }
