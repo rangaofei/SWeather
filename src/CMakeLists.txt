@@ -1,4 +1,3 @@
-
 configure_file(
         "SimpleWeatherConfigure.h.in"
         "${PROJECT_BINARY_DIR}/SimpleWeatherConfigure.h"
