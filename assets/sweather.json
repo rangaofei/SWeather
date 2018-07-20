@@ -1,0 +1,13 @@
+{
+    "sweather_config": {
+        "add_num": "CN101190206",
+        "show_version": 1,
+        "show_address": 1,
+        "show_forecast": 1,
+        "show_now": 1,
+        "show_hourly": 1,
+        "show_lifestyle": 1,
+        "show_time": 1,
+        "show_air": 1
+    }
+}
