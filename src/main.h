@@ -1,20 +1,24 @@
 #ifndef _MAIN_H
 #define _MAIN_H
 
-
-//#include "strcut_info.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 
+/**
+ *****************************
+ * version*查看当前版本号
+ * ****************************
+ *
+ */
 static const char *optString = "vl:nfhLs:";
 static const struct option longOpts[] = {
-        {"version",   no_argument, NULL, 'v'},
+        {"version",      no_argument,       NULL, 'v'},
         {"location",     required_argument, NULL, 0},
-        {"now",       no_argument, NULL, 'n'},
-        {"forecast",  no_argument, NULL, 'f'},
-        {"hourly",    no_argument, NULL, 'h'},
-        {"lifestyle", no_argument, NULL, 'L'},
+        {"now",          no_argument,       NULL, 'n'},
+        {"forecast",     no_argument,       NULL, 'f'},
+        {"hourly",       no_argument,       NULL, 'h'},
+        {"lifestyle",    no_argument,       NULL, 'L'},
         {"set-location", required_argument, NULL, 0},
 //        {NULL,        no_argument,       NULL, 0}
 };

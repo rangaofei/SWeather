@@ -5,7 +5,7 @@ project(SWeather C)
 
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 3)
-set(VERSION_PATCH 0)
+set(VERSION_PATCH 1)
 
 #采用debug模式时启用'ENABLE_DEBUG'
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)
@@ -29,6 +29,8 @@ set(CPACK_SOURCE_IGNORE_FILES
         ${PROJECT_SOURCE_DIR}/.DS_Store
         ${PROJECT_SOURCE_DIR}/.git
         ${PROJECT_SOURCE_DIR}/.gitignore
+        ${PROJECT_SOURCE_DIR}/.vscode
+        ${PROJECT_SOURCE_DIR}/.PIC
         ${PROJECT_SOURCE_DIR}/assets/city.txt)
 
 set(CPACK_SOURCE_GENERATOR "TGZ")
