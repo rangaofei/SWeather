@@ -3,14 +3,18 @@ configure_file(
         "${PROJECT_BINARY_DIR}/SimpleWeatherConfigure.h"
 )
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#include_directories(${PROJECT_SOURCE_DIR}/CJson)
-#include_directories(${PROJECT_SOURCE_DIR}/ParseWeather)
 include_directories(${PROJECT_BINARY_DIR})
-#include_directories(${PROJECT_SOURCE_DIR}/GetWeather)
-#include_directories(${PROJECT_SOURCE_DIR}/Location)
+include_directories(CharSytleWeather)
 add_subdirectory(CJson)
 add_subdirectory(ParseWeather)
-set(SOURCE_FILES main.c getweather.c location.c log_info.c)
+set(SOURCE_FILES
+        main.c
+        getweather.c
+        location.c
+        log_info.c
+        CharSytleWeather/weatherPrinter.c
+        CharSytleWeather/basicInfo.c
+        CharSytleWeather/updateTime.c)
 add_executable(sweather ${SOURCE_FILES})
 
 FIND_PACKAGE(CURL)

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+# 寻找build文件夹，不存在就创建
 function findBuild(){
     if [ ! -d "./build" ];then
         mkdir ./build
@@ -8,6 +8,7 @@ function findBuild(){
     fi
 }
 
+# 进入build文件夹，清除所有的缓存文件
 function cmakeOutBuild(){
     cd ./build
     echo "进入build文件夹，即将清除文件缓存"
@@ -16,9 +17,12 @@ function cmakeOutBuild(){
     cmake ..
     echo "外部构建执行完成"
 }
+# 打包文件
 function cmakePackage(){
     cpack --config CPackSourceConfig.cmake
 }
+
+# 读取日志文件，读入文件名称
 function readLogFile(){
     if [ -e "logfile" ];then
         tmp_path=`echo $(pwd) | sed -n "s#/#\\\\\/#gp"`
@@ -31,6 +35,7 @@ function readLogFile(){
     fi
 }
 
+# 本地提交git仓库，然后推送至远程仓库
 function commitToGitHub(){
     if [ ! -n "$package_name" ];then
         echo "不能提交"
@@ -41,6 +46,7 @@ function commitToGitHub(){
     fi
 }
 
+# 本地提交至brew仓库，远程提交
 function commitToBrew(){
     if [ ! -n "$package_name" ];then
         echo "不能提交到brew"
@@ -71,6 +77,6 @@ else
 fi
 cd ..
 readLogFile
-#commitToGitHub
+commitToGitHub
 commitToBrew
 

@@ -22,7 +22,9 @@ void exit_err(int err_num, char *err_msg) {
             break;
         case ERR_ADDRESS_NOT_SET:
             format_msg = "error occurred : You haven't set the default city,please"
-                    "use the command to set:\nsweather --set-location <city_name_%s>\n";
+                         "use the command to set:\nsweather --set-location <city_name_%s>\n";
+            break;
+        default:
             break;
     }
     fprintf(stderr, format_msg, err_msg);

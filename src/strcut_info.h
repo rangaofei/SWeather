@@ -20,5 +20,6 @@ typedef struct weather_args {
     char *location_num;     //地区编号
 } WeatherArgs;
 
+extern WeatherArgs context;
 
 #endif //SWEATHER_STRCUT_INFO_H

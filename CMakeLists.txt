@@ -5,7 +5,7 @@ project(SWeather C)
 
 set(VERSION_MAJOR 1)
 set(VERSION_MINOR 3)
-set(VERSION_PATCH 1)
+set(VERSION_PATCH 3)
 
 #采用debug模式时启用'ENABLE_DEBUG'
 IF (CMAKE_BUILD_TYPE STREQUAL Debug)

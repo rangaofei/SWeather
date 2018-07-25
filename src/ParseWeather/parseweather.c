@@ -2,6 +2,7 @@
 #include <time.h>
 #include <strcut_info.h>
 #include "parseweather.h"
+#include "weather_condition.h"
 /**
  * +----------------------------------------------------------------------------------+
  * |                                   江苏-无锡-梁溪                                   |
@@ -404,6 +405,7 @@ void show_air(cJSON *air, int show_basic, int show_air, int show_time) {
 }
 
 void show_weather_by_args(cJSON *data, WeatherArgs *weatherArgs) {
+
     if (weatherArgs->full_info) {
         show_weather(data, 1, 1, 1, 1, 1, 1);
     } else {

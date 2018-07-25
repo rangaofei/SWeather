@@ -121,6 +121,11 @@ void get_location(char *location) {
     free(locationArray);
 }
 
+/**
+ *
+ * @param location
+ * @param location_num
+ */
 void check_location(char *location, char *location_num) {
     LocationArray *locationArray = calloc(1, sizeof(LocationArray));
     get_target_cities(locationArray, location);
@@ -128,27 +133,29 @@ void check_location(char *location, char *location_num) {
         printf("输入的地址信息有误:%s", location);
         return;
     }
-    int num;
-    if (locationArray->length > 1) {
-        show_loc_info_simple(locationArray);
-        printf("共搜索到%d个区县/城市，列表展示格式为\"区-市-省\"\n", locationArray->length);
-        printf("请输入您要选择的城市序号：");
-        scanf("%d", &num);
-        fflush(stdin);
-        while ((num - 1) > locationArray->length || (num - 1) < 0) {
-            printf("您输入的编号错误,请重新输入：");
-            scanf("%d", &num);
-            fflush(stdin);
-        }
-        strcpy(location_num, (locationArray->location)[num - 1].area_num);
-    } else {
-        strcpy(location_num, location);
-    }
+//    int num;
+//    if (locationArray->length > 1) {
+//        show_loc_info_simple(locationArray);
+//        printf("共搜索到%d个区县/城市，列表展示格式为\"区-市-省\"\n", locationArray->length);
+//        printf("请输入您要选择的城市序号：");
+//        scanf("%d", &num);
+//        fflush(stdin);
+//        while ((num - 1) > locationArray->length || (num - 1) < 0) {
+//            printf("您输入的编号错误,请重新输入：");
+//            scanf("%d", &num);
+//            fflush(stdin);
+//        }
+//        strcpy(location_num, (locationArray->location)[num - 1].area_num);
+//    } else {
+//        strcpy(location_num, location);
+//    }
+    strcpy(location_num, locationArray->location[0].area_num);
     free(locationArray);
 }
 
 /**
- * 获取默认地址
+ * 获取默认地址,将地址写入num指向的地址
+ * 我们不直接处理未找到的情况，而是交给调用者处理
  */
 FILE_STATE get_default_num(char *num) {
     int status;
@@ -167,18 +174,16 @@ FILE_STATE get_default_num(char *num) {
 
 /********************************************
  * 正则表达式匹配地址编号                      
- * @param src                               
- * @return                                  
+ * @param src   将要被匹配的字符串
+ * @return      0--匹配成功，REG_NOMATCH--匹配不成功
  ********************************************/
 int regex_match_result(char *src) {
-    int state;
     const char *pattern = "^CN101[0-9]{6}$";
-    int cflags = REG_EXTENDED;
-    regmatch_t pmatch[1];
-    const size_t nmatch = 1;
+    regmatch_t p_match[1];
+    const size_t n_match = 1;
     regex_t reg;
-    regcomp(&reg, pattern, cflags);
-    state = regexec(&reg, src, nmatch, pmatch, 0);
+    regcomp(&reg, pattern, REG_EXTENDED);
+    int state = regexec(&reg, src, n_match, p_match, 0);
     regfree(&reg);
     return state;
 }

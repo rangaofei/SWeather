@@ -3,6 +3,7 @@
 
 
 #include "strcut_info.h"
+#include <stdio.h>
 
 #define WEATHER_NOW "weather/now"               //现在天气
 #define WEATHER_FORECAST "weather/forecast"     //3天天气
@@ -12,11 +13,15 @@
 #define AIR_NOW "air/now"                       //空气质量实况
 #define AIR_DEFAULT "air"                       //空气质量合集
 
+struct WeatherBody {
+    char *memory;
+    size_t size;
+};
 
-void get_weather(WeatherArgs *weatherArgs,char *type,bool isForecast);
+void get_weather(WeatherArgs *weatherArgs, bool isForecast);
 
 int get_weather_default(WeatherArgs *weatherArgs);
 
-void get_weather_by_args(WeatherArgs *weatherArgs);
+void get_weather_by_args();
 
 #endif
