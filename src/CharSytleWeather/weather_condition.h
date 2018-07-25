@@ -1,0 +1,8 @@
+//
+// Created by 冉高飞 on 2018/7/21.
+//
+
+#ifndef SWEATHER_WEATHER_CONDITION_H
+#define SWEATHER_WEATHER_CONDITION_H
+
+#endif //SWEATHER_WEATHER_CONDITION_H
